@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recommender System</title>
+</head>
+<body>
+    <h2>Assignment 6: Web Recommender System</h2>
+    <form action="/rs/page2" method="post">    <!-- TODO:/your-name/ is  url where the html request is sent to-->
+        <label for="userId">UserId: </label>
+        <input id="userId" type="text" name="userId" value="{{ userId }}">
+        <input type="submit" value="OK">
+    </form>
+
+    <p>{{ errorMessage }}</p>
+</body>
+</html>
