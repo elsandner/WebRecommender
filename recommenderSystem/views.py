@@ -35,21 +35,13 @@ def recommendation(request):
 
 
             #TODO: change back to loading calculated dataframe
-            recommendations = nn.getRecommendation(userId)
-            #recommendations = nn.loadDebugDataframe()
+            #recommendations = nn.getRecommendation(userId)
+            recommendations = nn.loadDebugDataframe()
             
             recommendationDict = recommendations.to_dict(orient="records")
 
-            titles = recommendations["title"].tolist()
-            genres = recommendations["genres"].tolist()
-            overview = recommendations["overview"].tolist()
-            releaseDate = recommendations["release_date"].tolist()
-            vote_average = recommendations["vote_average"].tolist()
-            vote_count = recommendations["vote_count"].tolist()
-
             template = loader.get_template('recommenderSystem/recommendation.html')
             context = {
-                'title': titles,
                 'data': recommendationDict,
                 'userId': userId,
             }

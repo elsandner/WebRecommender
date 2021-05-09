@@ -1,7 +1,7 @@
 from numpy import ndarray
 import pandas
-from pandas.core.frame import DataFrame
 import ast
+import re
 
 
 # This file is a copy of assignment 3
@@ -12,9 +12,9 @@ class NearestNeighbor:
         try:
             print("Loading dataframes...")
             # Loading this here, because it takes some time and will be used both in task A and B   !?!??! And C?
-            self.dataframeRatings = pandas.read_csv("../archive/ratings_small.csv", delimiter=',',            # self .. this is a class variable
+            self.dataframeRatings = pandas.read_csv("archive/ratings_small.csv", delimiter=',',            # self .. this is a class variable
                                                low_memory=False)
-            self.dataframeMovies = pandas.read_csv("../archive/movies_metadata.csv", delimiter=',',
+            self.dataframeMovies = pandas.read_csv("archive/movies_metadata.csv", delimiter=',',
                                               low_memory=False)
 
         except Exception as e:
@@ -61,7 +61,7 @@ class NearestNeighbor:
         topMovies = task_3C(rated_movies, dataframeMovies)
 
         topMovies["genres"] = topMovies["genres"].apply(reduce_genre_length)
-
+        #TODO: call methodes to refactor date and genres here
         return topMovies
 
     # The following function is only used for debug purpose to avoid waiting time of calculation
@@ -74,6 +74,11 @@ class NearestNeighbor:
             print("Failed to load the dataset")
             print(e)
             return
+
+        #TODO: refactor genre
+        testDataframe["genres"] = testDataframe["genres"].apply(refactorGenre)
+        testDataframe["release_date"] = testDataframe["release_date"].apply(refactorDate)
+
         return testDataframe
 
 # end of class - code below is basically a copy of assignment 3
@@ -135,7 +140,6 @@ def task_3C(rated_movies, dataframeMovies):
     return metaData[["id", "title", "genres", "overview", "release_date", "vote_average", "vote_count"]]
 
 
-# Helper Methods for getRecommendations
 def reduce_genre_length(input_str): #input string "[{'id': 878, 'name': 'Science Fiction'}, {'id': 27, 'name': 'Horror'}]"
     result_list = []                  #output list   ['Science Fiction', 'Horror']
     data_dict_list = ast.literal_eval(input_str)
@@ -184,7 +188,20 @@ def calculate_distance(list1, list2) -> float:
     return float(1 - float(len(common_elements) / len(total_elements)))
 
 
+#Refactor values for website
+def refactorGenre(input_str):
+    replace ={
+        91: 32,     # replace [ with whitespace
+        93: 32,     # replace ] with whitespace
+        39: 32,     # replace ' with whitespace
+    }
+    output_str = input_str.translate(replace)
+    output_str = re.sub(' ,', ',', output_str)
+    return output_str
 
+
+def refactorDate(input_str):
+    return input_str[0:4]
 
 
 # TODO's:
