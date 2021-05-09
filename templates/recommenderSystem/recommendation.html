@@ -8,9 +8,9 @@
     <h1>Recommendations for userID: {{ userId }}</h1>
 
 
-    {% if recommendations %}
+    {% if title %}
         <ul>
-        {% for movie in recommendations %}
+        {% for movie in title %}
 
             <li><p>{{ movie }}</p></li>
         {% endfor %}

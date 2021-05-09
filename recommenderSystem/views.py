@@ -37,14 +37,24 @@ def recommendation(request):
 
             recommendations = nn.getRecommendation(userId)
             # TODO: render data to html page
-            recommendations = recommendations.to_dict()
+            #recommendations = recommendations.to_dict()
 
-            titles = recommendations["title"]
-
+            titles = recommendations["title"].tolist()
+            genres = recommendations["genres"].tolist()
+            overview = recommendations["overview"].tolist()
+            releaseDate = recommendations["release_date"].tolist()
+            vote_average = recommendations["vote_average"].tolist()
+            vote_count = recommendations["vote_count"].tolist()
 
             template = loader.get_template('recommenderSystem/recommendation.html')
             context = {
-                'recommendations': titles,
+                'title': titles,
+                'genre': genres,
+                'overview': overview,
+                'releaseDate': releaseDate,
+                'vote_average': vote_average,
+                'vote_count': vote_count,
+
                 'userId': userId,
             }
             return HttpResponse(template.render(context))

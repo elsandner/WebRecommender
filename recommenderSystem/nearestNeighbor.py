@@ -60,6 +60,8 @@ class NearestNeighbor:
         rated_movies = task_3B(dataframeRatings, dataframeMovies, userId)
         topMovies = task_3C(rated_movies, dataframeMovies)
 
+        topMovies["genres"] = topMovies["genres"].apply(reduce_genre_length)
+
         return topMovies
 
 # end of class - code below is basically a copy of assignment 3
@@ -118,7 +120,7 @@ def task_3C(rated_movies, dataframeMovies):
 
     metaData = dataframeMovies[dataframeMovies['id'].isin(topMovies.keys())]
     metaData = metaData
-    return metaData[["id", "title", "genres", "overview", "release_date", "vote_average", "vote_average", "vote_count"]]
+    return metaData[["id", "title", "genres", "overview", "release_date", "vote_average", "vote_count"]]
 
 
 # Helper Methods for getRecommendations
