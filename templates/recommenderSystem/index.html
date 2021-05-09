@@ -4,14 +4,60 @@
     <meta charset="UTF-8">
     <title>Recommender System</title>
 </head>
-<body>
-    <h2>Assignment 6: Web Recommender System</h2>
-    <form action="/rs/page2" method="post">    <!-- TODO:/your-name/ is  url where the html request is sent to-->
-        <label for="userId">UserId: </label>
-        <input id="userId" type="text" name="userId" value="{{ userId }}">
-        <input type="submit" value="OK">
-    </form>
+<style>
+    *{
+        font-family: Arial;
+    }
+    #container{
+        background-color: #5AB9EA;
+        padding: 2em 10em 2em 10em;
+        margin-right: 20%;
+        margin-left: 20%;
+    }
+    #container > *{
+        text-align: center;
+    }
+    #error{
+        color: red;
+    }
+    /*loader animation*/
+    #loader {
+      visibility: hidden;
+      margin: 0 auto;
+      border: 16px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 16px solid #3498db;
+      width: 80px;
+      height: 80px;
+      -webkit-animation: spin 2s linear infinite; /* Safari */
+      animation: spin 2s linear infinite;
+    }
+    /* Safari */
+    @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+    }
 
-    <p>{{ errorMessage }}</p>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+</style>
+
+<body>
+    <div id="container">
+        <h2>Web Recommender System</h2>
+        <p>Enter your userID to see some movie recommendations based on the nearest-neighbor algorithm</p>
+        <form action="/rs/page2" method="post">
+            <label for="userId">UserId: </label>
+            <input id="userId" type="text" name="userId" value="{{ userId }}">
+            <input type="submit" value="OK" onClick="document.getElementById('loader').style.visibility = 'visible'">
+        </form>
+
+        <p id="error">{{ errorMessage }}</p>
+        <br>
+        <div id="loader"></div>
+    </div>
 </body>
 </html>

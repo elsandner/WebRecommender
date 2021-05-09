@@ -1,4 +1,3 @@
-from numpy import ndarray
 import pandas
 import ast
 import re
@@ -7,21 +6,6 @@ import re
 # This file is a copy of assignment 3
 class NearestNeighbor:
 
-    #TODO: i guess __init__ is not needed and this file does not need to be a class
-    def __init__(self):
-        try:
-            print("Loading dataframes...")
-            # Loading this here, because it takes some time and will be used both in task A and B   !?!??! And C?
-            self.dataframeRatings = pandas.read_csv("archive/ratings_small.csv", delimiter=',',            # self .. this is a class variable
-                                               low_memory=False)
-            self.dataframeMovies = pandas.read_csv("archive/movies_metadata.csv", delimiter=',',
-                                              low_memory=False)
-
-        except Exception as e:
-            print("Failed to load the dataset")
-            print(e)
-            return
-
     def validateUserId(self, userId) -> bool:
         try:
             userId = int(userId)
@@ -29,9 +13,7 @@ class NearestNeighbor:
             return False
 
         try:
-            # Loading this here, because it takes some time and will be used both in task A and B   !?!??! And C?
-            dataframeRatings = pandas.read_csv("archive/ratings_small.csv", delimiter=',',            # self .. this is a class variable
-                                               low_memory=False)
+            dataframeRatings = pandas.read_csv("archive/ratings_small.csv", delimiter=',', low_memory=False)
         except Exception as e:
             print("Failed to load the dataset")
             print(e)
@@ -43,10 +25,8 @@ class NearestNeighbor:
     def getRecommendation(self, userId):    # like main in assignment3
         try:
             print("Loading dataframes...")
-            dataframeRatings = pandas.read_csv("archive/ratings_small.csv", delimiter=',',
-                                               low_memory=False)  # low_memory=False was suggested by PyCharm to get rid off DTypeWarning
-            dataframeMovies = pandas.read_csv("archive/movies_metadata.csv", delimiter=',',
-                                              low_memory=False)
+            dataframeRatings = pandas.read_csv("archive/ratings_small.csv", delimiter=',', low_memory=False)
+            dataframeMovies = pandas.read_csv("archive/movies_metadata.csv", delimiter=',', low_memory=False)
         except Exception as e:
             print("Failed to load the dataset")
             print(e)
@@ -60,8 +40,11 @@ class NearestNeighbor:
         rated_movies = task_3B(dataframeRatings, dataframeMovies, userId)
         topMovies = task_3C(rated_movies, dataframeMovies)
 
-        topMovies["genres"] = topMovies["genres"].apply(reduce_genre_length)
-        #TODO: call methodes to refactor date and genres here
+        # Refactor Strings for better appearance on website
+        topMovies["genres"] = topMovies["genres"].apply(reduce_genre_length)    # build on existing function
+        topMovies["genres"] = topMovies["genres"].apply(refactorGenre)
+        topMovies["release_date"] = topMovies["release_date"].apply(refactorDate)
+        topMovies["vote_count"] = topMovies["vote_count"].apply(refactorVoteCount)
         return topMovies
 
     # The following function is only used for debug purpose to avoid waiting time of calculation
@@ -75,16 +58,13 @@ class NearestNeighbor:
             print(e)
             return
 
-        #TODO: refactor genre
-        testDataframe["genres"] = testDataframe["genres"].apply(refactorGenre)
+        # Refactor Strings for better appearance on website
+        testDataframe["genres"] = testDataframe["genres"].apply(refactorGenre_debug)
         testDataframe["release_date"] = testDataframe["release_date"].apply(refactorDate)
 
         return testDataframe
 
 # end of class - code below is basically a copy of assignment 3
-
-
-
 # -------- TASK 2 --------------#
 
 def task_3B(dataframeRatings, dataframeMovies, user_id):
@@ -111,7 +91,6 @@ def task_3B(dataframeRatings, dataframeMovies, user_id):
     print(dataframeMerged[["title", "genres",
                            "rating"]])  # Rating is not required in the task B) description, but it would be usefull in task C)
     return dataframeMerged[["title", "genres", "rating"]]
-
 
 # -------- TASK 3 --------------#
 
@@ -188,9 +167,15 @@ def calculate_distance(list1, list2) -> float:
     return float(1 - float(len(common_elements) / len(total_elements)))
 
 
-#Refactor values for website
-def refactorGenre(input_str):
-    replace ={
+# Refactor values for website
+def refactorGenre(input_list):
+    s = ', '
+    return s.join(input_list)
+
+
+#only used for debug reason
+def refactorGenre_debug(input_str):
+    replace = {
         91: 32,     # replace [ with whitespace
         93: 32,     # replace ] with whitespace
         39: 32,     # replace ' with whitespace
@@ -203,9 +188,6 @@ def refactorGenre(input_str):
 def refactorDate(input_str):
     return input_str[0:4]
 
-
-# TODO's:
-    # only load dataframes once
-    # show something like "calculating recommendations .. "
-    # cleanup code (I guess there are is some unneeded stuff ..)
-    # define param and return datatypes
+def refactorVoteCount(input_float):
+    output_int = int(input_float)
+    return output_int

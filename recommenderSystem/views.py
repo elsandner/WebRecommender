@@ -14,12 +14,12 @@ from recommenderSystem import nearestNeighbor
 def index(request):
     template = loader.get_template('recommenderSystem/index.html')
     context = {
-        'userId': '0',
+        'userId': '1',
     }
     return HttpResponse(template.render(context))
 
 
-# function used to get experienced with html forms in django
+# function executed on button click
 @csrf_exempt
 def recommendation(request):
     print("Exec recommendation")
@@ -32,11 +32,8 @@ def recommendation(request):
         nn = nearestNeighbor.NearestNeighbor()
 
         if nn.validateUserId(userId):
-
-
-            #TODO: change back to loading calculated dataframe
-            #recommendations = nn.getRecommendation(userId)
-            recommendations = nn.loadDebugDataframe()
+            recommendations = nn.getRecommendation(userId)
+            #recommendations = nn.loadDebugDataframe()  # use this to avoid waiting time when dubigging
             
             recommendationDict = recommendations.to_dict(orient="records")
 
@@ -46,6 +43,7 @@ def recommendation(request):
                 'userId': userId,
             }
             return HttpResponse(template.render(context))
+
         else:
             template = loader.get_template('recommenderSystem/index.html')
             context = {
@@ -53,25 +51,7 @@ def recommendation(request):
             }
             return HttpResponse(template.render(context))
 
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        # TODO: actually not needed but maybe handle get request later
-        form = NameForm()
 
-    return render(request, 'recommenderSystem/recommendation.html', {'form': form})
-
-
-# check if user entered a ID which exists in database
-def validateInput(self, value: str) -> bool:
-    """
-    Checks if the 'value' is contained in the 'unique_ID' set.
-    """
-    try:
-        value = int(value)
-    except ValueError:
-        return False
-    result = int(value) in self.dataframeRatings["userId"].unique()
-    return result
 
 
 
