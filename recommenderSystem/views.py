@@ -34,10 +34,11 @@ def recommendation(request):
         if nn.validateUserId(userId):
 
 
-
+            #TODO: change back to loading calculated dataframe
             recommendations = nn.getRecommendation(userId)
-            # TODO: render data to html page
-            #recommendations = recommendations.to_dict()
+            #recommendations = nn.loadDebugDataframe()
+            
+            recommendationDict = recommendations.to_dict(orient="records")
 
             titles = recommendations["title"].tolist()
             genres = recommendations["genres"].tolist()
@@ -49,12 +50,7 @@ def recommendation(request):
             template = loader.get_template('recommenderSystem/recommendation.html')
             context = {
                 'title': titles,
-                'genre': genres,
-                'overview': overview,
-                'releaseDate': releaseDate,
-                'vote_average': vote_average,
-                'vote_count': vote_count,
-
+                'data': recommendationDict,
                 'userId': userId,
             }
             return HttpResponse(template.render(context))

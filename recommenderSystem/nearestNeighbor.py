@@ -64,6 +64,18 @@ class NearestNeighbor:
 
         return topMovies
 
+    # The following function is only used for debug purpose to avoid waiting time of calculation
+    def loadDebugDataframe(self):
+        try:
+            print("Loading dataframes...")
+            testDataframe = pandas.read_csv("archive/testDataframe.csv", delimiter=',', low_memory=False)
+
+        except Exception as e:
+            print("Failed to load the dataset")
+            print(e)
+            return
+        return testDataframe
+
 # end of class - code below is basically a copy of assignment 3
 
 
@@ -170,6 +182,7 @@ def calculate_distance(list1, list2) -> float:
     total_elements = set(list1)
 
     return float(1 - float(len(common_elements) / len(total_elements)))
+
 
 
 

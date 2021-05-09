@@ -7,17 +7,22 @@
 <body>
     <h1>Recommendations for userID: {{ userId }}</h1>
 
+    <br><br><br>
+    <p>PART 2</p>
 
-    {% if title %}
-        <ul>
-        {% for movie in title %}
+    <table>
+        {% for row in data %}
+            <br><br><br><br><br><br>
+          <ul>
+            {% for key, value in row.items %}
+                <li>
+                    <p>{{ key }}: {{ value }}</p>
+                </li>
+            {% endfor %}
+          </ul>
 
-            <li><p>{{ movie }}</p></li>
         {% endfor %}
-        </ul>
-    {% else %}
-        <p>No polls are available.</p>
-    {% endif %}
+    </table>
 
 
 </body>
