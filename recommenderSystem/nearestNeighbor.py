@@ -37,7 +37,7 @@ class NearestNeighbor:
         except ValueError:
             return False
 
-        rated_movies = task_3B(dataframeRatings, dataframeMovies, userId)
+        rated_movies = task_3B(dataframeRatings, dataframeMovies, userId)   #TODO: BUGFIX: This allways returns the same thing
         topMovies = task_3C(rated_movies, dataframeMovies)
 
         # Refactor Strings for better appearance on website
@@ -88,8 +88,7 @@ def task_3B(dataframeRatings, dataframeMovies, user_id):
     # They are merged based on the movie id.
     # Since we want to get movies that a user has rated, it doesn't make sense
     print("\nMovies User " + str(user_id) + " has rated: ")
-    print(dataframeMerged[["title", "genres",
-                           "rating"]])  # Rating is not required in the task B) description, but it would be usefull in task C)
+    print(dataframeMerged[["title", "genres", "rating"]])  # Rating is not required in the task B) description, but it would be usefull in task C)
     return dataframeMerged[["title", "genres", "rating"]]
 
 # -------- TASK 3 --------------#
