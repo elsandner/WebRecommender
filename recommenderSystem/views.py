@@ -32,12 +32,19 @@ def recommendation(request):
         nn = nearestNeighbor.NearestNeighbor()
 
         if nn.validateUserId(userId):
-            #TODO: execute algorithm and print recommendations
+
+
 
             recommendations = nn.getRecommendation(userId)
+            # TODO: render data to html page
+            recommendations = recommendations.to_dict()
+
+            titles = recommendations["title"]
+
+
             template = loader.get_template('recommenderSystem/recommendation.html')
             context = {
-                'recommendations': recommendations,
+                'recommendations': titles,
                 'userId': userId,
             }
             return HttpResponse(template.render(context))
@@ -57,7 +64,7 @@ def recommendation(request):
 
 
 # check if user entered a ID which exists in database
-def validateInput(self, value: str) -> bool:  # TODO: change to int parameter
+def validateInput(self, value: str) -> bool:
     """
     Checks if the 'value' is contained in the 'unique_ID' set.
     """
