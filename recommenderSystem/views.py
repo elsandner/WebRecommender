@@ -33,7 +33,6 @@ def recommendation(request):
 
         if nn.validateUserId(userId):
             recommendations = nn.getRecommendation(userId)
-            #recommendations = nn.loadDebugDataframe()  # use this to avoid waiting time when dubigging
             
             recommendationDict = recommendations.to_dict(orient="records")
 

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recommender System</title>
+</head>
+<style>
+    *{
+        font-family: Arial;
+    }
+    #container{
+        background-color: #5AB9EA;
+        padding: 2em 10em 2em 10em;
+        margin-right: 20%;
+        margin-left: 20%;
+    }
+    #container > *{
+        text-align: center;
+    }
+    #error{
+        color: red;
+    }
+    /*loader animation*/
+    #loader {
+      visibility: hidden;
+      margin: 0 auto;
+      border: 16px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 16px solid #3498db;
+      width: 80px;
+      height: 80px;
+      -webkit-animation: spin 2s linear infinite; /* Safari */
+      animation: spin 2s linear infinite;
+    }
+    /* Safari */
+    @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+</style>
+
+<body>
+    <div id="container">
+        <h2>Similar Item Recommendation</h2>
+        <p>Search a movie title to find similar movies</p>
+
+        <form action="/sir/searchResult" method="post">
+            <label for="userId">UserId: </label>
+            <input id="userId" type="text" name="userId" value="{{ userId }}">
+            <input type="submit" value="OK" onClick="document.getElementById('loader').style.visibility = 'visible'">
+        </form>
+
+        <p id="error">{{ errorMessage }}</p>
+        <br>
+        <div id="loader"></div>
+    </div>
+</body>
+</html>

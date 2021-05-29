@@ -18,5 +18,6 @@ from django.urls import include, path
 
 urlpatterns = [
     path('rs/', include('recommenderSystem.urls')),
+    path('sir/', include('similarItemRecommendations.urls')),   # sir= similar item recommendation
     path('admin/', admin.site.urls),
 ]
