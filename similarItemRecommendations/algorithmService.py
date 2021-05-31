@@ -3,7 +3,7 @@ import pandas
 
 def loadDF(path: str):
     try:
-        print("Loading metadata...")
+        print("Loading dataframe from "+path+"...")
         return pandas.read_csv(path, delimiter=',', low_memory=False)
 
     except Exception as e:

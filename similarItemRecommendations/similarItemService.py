@@ -4,14 +4,7 @@ import pandas
 from similarItemRecommendations import algorithmService
 
 
-def searchMovies(title):
-    try:
-        print("Loading dataframe...")
-        dataframeMovies = pandas.read_csv("archive/movies_metadata.csv", delimiter=',', low_memory=False)
-    except Exception as e:
-        print("Failed to load the dataset")
-        print(e)
-        return
+def searchMovies(title, dataframeMovies):
 
     # filter metadata according to search title
     dataframeMovies = dataframeMovies[dataframeMovies['title'].str.contains(title, na=False)]
@@ -19,18 +12,10 @@ def searchMovies(title):
     return convertDfToDict(dataframeMovies)
 
 
-def getSimilarMovies(movieId, algorithmId):
+def getSimilarMovies(movieId, algorithmId, dataframeMovies):
 
     similarMovies = applySimilarityAlgorithm(movieId, algorithmId) #List of Integers
     similarMoviesStr = map(str, similarMovies)
-
-    try:
-        print("Loading dataframe...")
-        dataframeMovies = pandas.read_csv("archive/movies_metadata.csv", delimiter=',', low_memory=False)
-    except Exception as e:
-        print("Failed to load the dataset")
-        print(e)
-        return
 
     dataframeMovies = dataframeMovies[dataframeMovies['id'].isin(similarMoviesStr)]
 
@@ -88,3 +73,15 @@ def convertDfToDict(df: pandas.DataFrame):
 
     # convert dataframe to dict, so the data can be used in the html easier
     return dataframeMovies.to_dict(orient="records")
+
+
+def loadMetaDataFromDF():
+    try:
+        print("Loading metadata...")
+        dataframeMovies = pandas.read_csv("archive/movies_metadata.csv", delimiter=',', low_memory=False)
+    except Exception as e:
+        print("Failed to load the dataset")
+        print(e)
+        return
+    return dataframeMovies
+

@@ -1,13 +1,11 @@
-from django.forms import forms
-from django.shortcuts import render
-
-# Create your views here.
 from django.http import HttpResponse
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 from similarItemRecommendations import similarItemService
 
-from recommenderSystem.forms import NameForm # TODO: whats this NameForm??!
+from recommenderSystem.forms import NameForm    # TODO: whats this NameForm??!
+
+metadata = similarItemService.loadMetaDataFromDF()
 
 
 def index(request):
@@ -25,7 +23,7 @@ def searchMovieByTitle(request):
         form = NameForm(request.POST)   # TODO: works but seems to be bad practice ...
         title = form.data.get("title")
 
-        searchMoviesDict = similarItemService.searchMovies(title)
+        searchMoviesDict = similarItemService.searchMovies(title, metadata)
 
         template = loader.get_template('similarItemRecommendations/searchResult.html')
         context = {
@@ -41,7 +39,7 @@ def showSimilarMovies(request):
         form = NameForm(request.POST)  # TODO: works but seems to be bad practice ...
         movieId = form.data.get("movieId")
 
-        similarMoviesDict = similarItemService.getSimilarMovies(movieId, 1)
+        similarMoviesDict = similarItemService.getSimilarMovies(movieId, 1, metadata)
 
         template = loader.get_template('similarItemRecommendations/similarMovies.html')
         context = {
