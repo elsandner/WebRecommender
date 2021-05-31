@@ -36,6 +36,7 @@ def searchMovieByTitle(request):
 
 @csrf_exempt
 def showSimilarMovies(request):
+    print("calculating similar items...")
     if request.method == 'POST':
         form = NameForm(request.POST)  # TODO: works but seems to be bad practice ...
         movieId = form.data.get("movieId")
