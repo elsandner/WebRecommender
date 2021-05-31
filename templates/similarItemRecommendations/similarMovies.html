@@ -10,7 +10,15 @@
         font-family: Arial;
     }
     #headline{
+        display: inline-block;
         margin-left: 0.6em;
+    }
+
+    #form{
+        display: inline-block;
+        float: right;
+        padding-top: 2em;
+        padding-right: 1em;
     }
     .movie {
         background-color: #84CEEB;
@@ -75,10 +83,61 @@
       border-top: none;
     }
 
+        /*CSS rules for waiting screen*/
+    #overlay {
+      position: fixed; /* Sit on top of the page content */
+      display: none; /* Hidden by default */
+      width: 100%; /* Full width (cover the whole page) */
+      height: 100%; /* Full height (cover the whole page) */
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255,255,255,0.9); /* Black background with opacity */
+      z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+
+    }
+
+    #waitingScreen{
+      color: black;
+      text-align: center;
+      margin: 10% auto;
+    }
+    /*loader animation*/
+    #loader {
+      margin: 0 auto;
+      border: 16px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 16px solid #3498db;
+      width: 80px;
+      height: 80px;
+      -webkit-animation: spin 2s linear infinite; /* Safari */
+      animation: spin 2s linear infinite;
+    }
+    /* Safari */
+    @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
 </style>
 
 <body>
+
+
     <h1 id="headline"> 5 most similar movies for {{ movieTitle }}</h1>
+
+    <form id="form" action="/sir/searchResult" method="post">
+        <label for="title">Title: </label>
+        <input id="title" type="text" name="title" value="{{ userId }}">
+        <input type="submit" value="Search" onClick="document.getElementById('loader').style.visibility = 'visible'">
+    </form>
+
 
     <div class="tab">
       <button class="tablinks" onclick="openResult(event, 'Algorithm1')">Similar Keywords</button> <!--event is deprecated but still works fine..-->
@@ -95,7 +154,7 @@
             <form action="/sir/similarMovies" method="post">
                 <input type = "hidden" name = "movieId" value = "{{ row.id }}" />
 
-                <div class="movie" onclick="this.parentNode.submit();">
+                <div class="movie" onclick="showSimilarItems(this);">
                     <div class="headline">
                         <h1>{{ row.title }}</h1>
                         <p class="date">  ({{ row.release_date }})</p>
@@ -127,9 +186,17 @@
       <p>Algorithm 5 is not implemented yet </p>
     </div>
 
+        <!-- Loading Screen -->
+    <div id="overlay">
+        <div id="waitingScreen">
+            <h1>calculating similar movies ...</h1>
+            <div id="loader"></div>
+        </div>
+    </div>
 
     <!--Script used to show taps-->
     <script>
+        //switch between Taps
         function openResult(evt, algorithm) {
           var i, tabcontent, tablinks;
           tabcontent = document.getElementsByClassName("tabcontent");
@@ -142,6 +209,12 @@
           }
           document.getElementById(algorithm).style.display = "block";
           evt.currentTarget.className += " active";
+        }
+
+        //show similar items of clicked movie and show waiting screen
+        function showSimilarItems(el) {
+          document.getElementById("overlay").style.display = "block";
+          el.parentElement.submit();
         }
 
         openResult(event, 'Algorithm1')

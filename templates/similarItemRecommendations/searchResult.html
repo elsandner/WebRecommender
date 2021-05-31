@@ -10,8 +10,17 @@
         font-family: Arial;
     }
     #headline{
+        display: inline-block;
         margin-left: 0.6em;
     }
+
+    #form{
+        display: inline-block;
+        float: right;
+        padding-top: 2em;
+        padding-right: 2em;
+    }
+
     .movie {
         background-color: #84CEEB;
         color: black;
@@ -81,6 +90,12 @@
 
 <body>
     <h1 id="headline"> Results for {{ searchTitle }}</h1>
+
+    <form id="form" action="/sir/searchResult" method="post">
+        <label for="title">Title: </label>
+        <input id="title" type="text" name="title" value="{{ userId }}">
+        <input type="submit" value="Search" onClick="document.getElementById('loader').style.visibility = 'visible'">
+    </form>
 
     <!-- Movie Container -->
     {% for row in searchMovies %}
