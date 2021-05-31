@@ -42,19 +42,28 @@
 
     <!-- Movie Container -->
     {% for row in searchMovies %}
-        <div class="movie">
-            <div class="headline">
-                <h1>{{ row.title }}</h1>
-                <p class="date">  ({{ row.release_date }})</p>
-                <p class="rating">Rating: {{ row.vote_average }}/10 ( {{ row.vote_count }} reviews)</p>
-            </div>
-            <p><b>Genres: </b> {{ row.genres}}</p>
 
-            <p class="overview">
-                 {{ row.overview }}
-            </p>
-        </div>
+        <form action="/sir/similarMovies" method="post">
+            <input type = "hidden" name = "movieId" value = "{{ row.id }}" />
+
+            <div class="movie" onclick="this.parentNode.submit();">
+                <div class="headline">
+                    <h1>{{ row.title }}</h1>
+                    <p class="date">  ({{ row.release_date }})</p>
+                    <p class="rating">Rating: {{ row.vote_average }}/10 ( {{ row.vote_count }} reviews)</p>
+                </div>
+                <p><b>Genres: </b> {{ row.genres}}</p>
+
+                <p class="overview">
+                     {{ row.overview }}
+                </p>
+            </div>
+
+        </form>
+
     {% endfor %}
+
+
 
 </body>
 </html>

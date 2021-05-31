@@ -38,7 +38,7 @@ class SimilarItemService:
         return searchMovies
 
 
-# helpter Methods:
+# helper Methods:
 def reduce_genre_length(input_str): #input string "[{'id': 878, 'name': 'Science Fiction'}, {'id': 27, 'name': 'Horror'}]"
     result_list = []                  #output list   ['Science Fiction', 'Horror']
     data_dict_list = ast.literal_eval(input_str)

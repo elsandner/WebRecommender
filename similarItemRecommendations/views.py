@@ -34,3 +34,16 @@ def searchMovieByTitle(request):
             'searchTitle': title
         }
         return HttpResponse(template.render(context))
+
+@csrf_exempt
+def showSimilarMovies(request):
+    if request.method == 'POST':
+        form = NameForm(request.POST)  # TODO: works but seems to be bad practice ...
+        movieId = form.data.get("movieId")
+
+        template = loader.get_template('similarItemRecommendations/similarMovies.html')
+        context = {
+            'movieId': movieId,
+            'searchTitle': "title"
+        }
+        return HttpResponse(template.render(context))
