@@ -5,8 +5,8 @@ from similarItemRecommendations import similarItemService
 
 from recommenderSystem.forms import NameForm    # TODO: whats this NameForm??!
 
-metadata = similarItemService.loadMetaDataFromDF()
-
+metadata_DF = similarItemService.loadDF("archive/movies_metadata.csv")
+keywords_DF = similarItemService.loadDF("archive/keywords.csv")
 
 def index(request):
     template = loader.get_template('similarItemRecommendations/index.html')
@@ -14,6 +14,7 @@ def index(request):
         'Title': 'Enter a Title to search for it',
     }
     return HttpResponse(template.render(context))
+
 
 @csrf_exempt
 def searchMovieByTitle(request):
@@ -23,7 +24,7 @@ def searchMovieByTitle(request):
         form = NameForm(request.POST)   # TODO: works but seems to be bad practice ...
         title = form.data.get("title")
 
-        searchMoviesDict = similarItemService.searchMovies(title, metadata)
+        searchMoviesDict = similarItemService.searchMovies(title, metadata_DF)
 
         template = loader.get_template('similarItemRecommendations/searchResult.html')
         context = {
@@ -39,12 +40,15 @@ def showSimilarMovies(request):
         form = NameForm(request.POST)  # TODO: works but seems to be bad practice ...
         movieId = form.data.get("movieId")
 
-        similarMoviesDict = similarItemService.getSimilarMovies(movieId, 1, metadata)
+        movieTitle = metadata_DF.loc[metadata_DF['id'] == movieId].iloc[0]['title']
+
+        similarMoviesDict = similarItemService.getSimilarMovies(movieId, 1, metadata_DF, keywords_DF)
 
         template = loader.get_template('similarItemRecommendations/similarMovies.html')
         context = {
+            'movieTitle': movieTitle,
             'searchMovie': similarMoviesDict,
-            'movieId': movieId
+
 
         }
         return HttpResponse(template.render(context))

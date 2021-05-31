@@ -12,9 +12,9 @@ def searchMovies(title, dataframeMovies):
     return convertDfToDict(dataframeMovies)
 
 
-def getSimilarMovies(movieId, algorithmId, dataframeMovies):
+def getSimilarMovies(movieId, algorithmId, dataframeMovies, keywords_DF):
 
-    similarMovies = applySimilarityAlgorithm(movieId, algorithmId) #List of Integers
+    similarMovies = applySimilarityAlgorithm(movieId, algorithmId, keywords_DF) #List of Integers
     similarMoviesStr = map(str, similarMovies)
 
     dataframeMovies = dataframeMovies[dataframeMovies['id'].isin(similarMoviesStr)]
@@ -29,22 +29,22 @@ def reduce_genre_length(input_str): #input string "[{'id': 878, 'name': 'Science
         result_list.append(entry["name"])
     return result_list
 
-# helper methods for getSimilarMovies:
 
-def applySimilarityAlgorithm(movieId, algorithmId):
+# helper methods for getSimilarMovies:
+def applySimilarityAlgorithm(movieId, algorithmId, keywords_DF):
 
     # TODO: change algorithms as soon as they are implemented
 
     if algorithmId == 1:
-        similarMovies = algorithmService.similarKeywords(movieId)
+        similarMovies = algorithmService.similarKeywords(movieId, keywords_DF)
     elif algorithmId == 2:
-        similarMovies = algorithmService.similarKeywords(movieId)
+        similarMovies = algorithmService.similarKeywords(movieId, keywords_DF)
     elif algorithmId == 3:
-        similarMovies = algorithmService.similarKeywords(movieId)
+        similarMovies = algorithmService.similarKeywords(movieId, keywords_DF)
     elif algorithmId == 4:
-        similarMovies = algorithmService.similarKeywords(movieId)
+        similarMovies = algorithmService.similarKeywords(movieId, keywords_DF)
     elif algorithmId == 5:
-        similarMovies = algorithmService.similarKeywords(movieId)
+        similarMovies = algorithmService.similarKeywords(movieId, keywords_DF)
     else:
         similarMovies = ["invalid algorithmId"]
 
@@ -75,13 +75,12 @@ def convertDfToDict(df: pandas.DataFrame):
     return dataframeMovies.to_dict(orient="records")
 
 
-def loadMetaDataFromDF():
+def loadDF(path: str):
     try:
-        print("Loading metadata...")
-        dataframeMovies = pandas.read_csv("archive/movies_metadata.csv", delimiter=',', low_memory=False)
+        print("Loading dataframe from "+path+"...")
+        return pandas.read_csv(path, delimiter=',', low_memory=False)
+
     except Exception as e:
         print("Failed to load the dataset")
         print(e)
         return
-    return dataframeMovies
-

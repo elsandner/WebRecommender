@@ -1,17 +1,6 @@
 import pandas
 
 
-def loadDF(path: str):
-    try:
-        print("Loading dataframe from "+path+"...")
-        return pandas.read_csv(path, delimiter=',', low_memory=False)
-
-    except Exception as e:
-        print("Failed to load the dataset")
-        print(e)
-        return
-
-
 def calcSimilarity(kw1: pandas.Series, kw2: pandas.Series):   # kw..keyword list
 
     kw1_length = len(kw1)
@@ -27,19 +16,15 @@ def calcSimilarity(kw1: pandas.Series, kw2: pandas.Series):   # kw..keyword list
 # Algorithm 1 of 5
 # Compares the similarity of the movies keyword and all other movies keywords to find most similar movies
 # returns list of 5 most similar movies
-def similarKeywords(movieId: int):
+def similarKeywords(movieId: int, keywords_DF):
 
     try:
         movieId = int(movieId)
     except ValueError:
         return False
 
-    keywords_DF = loadDF("archive/keywords.csv")
-
-    mainKW_Series = keywords_DF[keywords_DF["id"] == movieId]["keywords"]
+    mainKW_String = keywords_DF[keywords_DF["id"] == movieId].iloc[0]['keywords']
     keywords_DF = keywords_DF[keywords_DF["id"] != movieId]  # remove main-keywords from keywords_DF
-
-    mainKW_String = mainKW_Series.get(0)
 
     # change separator between dicts to avoid splitting on ', ' in dict
     mainKW_String = mainKW_String.replace('}, ', '}|')
