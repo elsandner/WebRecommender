@@ -51,9 +51,9 @@
         <p>Search a movie title to find similar movies</p>
 
         <form action="/sir/searchResult" method="post">
-            <label for="userId">UserId: </label>
-            <input id="userId" type="text" name="userId" value="{{ userId }}">
-            <input type="submit" value="OK" onClick="document.getElementById('loader').style.visibility = 'visible'">
+            <label for="title">Title: </label>
+            <input id="title" type="text" name="title" value="{{ userId }}">
+            <input type="submit" value="Search" onClick="document.getElementById('loader').style.visibility = 'visible'">
         </form>
 
         <p id="error">{{ errorMessage }}</p>

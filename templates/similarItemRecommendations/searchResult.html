@@ -4,7 +4,57 @@
     <meta charset="UTF-8">
     <title>Recommender System</title>
 </head>
+
+<style>
+    *{
+        font-family: Arial;
+    }
+    #headline{
+        margin-left: 0.6em;
+    }
+    .movie {
+        background-color: #84CEEB;
+        color: black;
+        padding: 2em;
+        margin: 1em;
+    }
+    .headline > * {
+        display: inline;
+    }
+    .rating{
+        float: right;
+        font-size: 1.5em;
+    }
+    .date{
+        font-size: 1.2em;
+    }
+    .overview{
+        background-color: #5AB9EA;
+        color: black;
+        padding: 1em;
+        font-size: 1.2em;
+    }
+
+</style>
+
 <body>
-    <p>here will the search results be shown</p>
+    <h1 id="headline"> Results for {{ searchTitle }}</h1>
+
+    <!-- Movie Container -->
+    {% for row in searchMovies %}
+        <div class="movie">
+            <div class="headline">
+                <h1>{{ row.title }}</h1>
+                <p class="date">  ({{ row.release_date }})</p>
+                <p class="rating">Rating: {{ row.vote_average }}/10 ( {{ row.vote_count }} reviews)</p>
+            </div>
+            <p><b>Genres: </b> {{ row.genres}}</p>
+
+            <p class="overview">
+                 {{ row.overview }}
+            </p>
+        </div>
+    {% endfor %}
+
 </body>
 </html>

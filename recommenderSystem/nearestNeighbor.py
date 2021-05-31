@@ -37,7 +37,7 @@ class NearestNeighbor:
         except ValueError:
             return False
 
-        rated_movies = task_3B(dataframeRatings, dataframeMovies, userId)   #TODO: BUGFIX: This allways returns the same thing
+        rated_movies = task_3B(dataframeRatings, dataframeMovies, userId)
         topMovies = task_3C(rated_movies, dataframeMovies)
 
         # Refactor Strings for better appearance on website
@@ -96,7 +96,7 @@ def task_3B(dataframeRatings, dataframeMovies, user_id):
 def task_3C(rated_movies, dataframeMovies):
 
     sampled_movies = dataframeMovies[
-        ["id",      # TODO: remove unneeded columns
+        ["id",
          "title",
          "genres",
          "overview",
