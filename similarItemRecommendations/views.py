@@ -25,8 +25,7 @@ def searchMovieByTitle(request):
         form = NameForm(request.POST)   # TODO: works but seems to be bad practice ...
         title = form.data.get("title")
 
-        service = similarItemService.SimilarItemService()
-        searchMoviesDict = service.searchMovies(title)
+        searchMoviesDict = similarItemService.searchMovies(title)
 
         template = loader.get_template('similarItemRecommendations/searchResult.html')
         context = {
@@ -35,15 +34,19 @@ def searchMovieByTitle(request):
         }
         return HttpResponse(template.render(context))
 
+
 @csrf_exempt
 def showSimilarMovies(request):
     if request.method == 'POST':
         form = NameForm(request.POST)  # TODO: works but seems to be bad practice ...
         movieId = form.data.get("movieId")
 
+        similarMoviesDict = similarItemService.getSimilarMovies(movieId, 1)
+
         template = loader.get_template('similarItemRecommendations/similarMovies.html')
         context = {
-            'movieId': movieId,
-            'searchTitle': "title"
+            'searchMovie': similarMoviesDict,
+            'movieId': movieId
+
         }
         return HttpResponse(template.render(context))
