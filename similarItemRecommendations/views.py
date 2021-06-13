@@ -88,7 +88,7 @@ def showMoviesByDirectors(request):
         movieTitle = metadata_DF.loc[metadata_DF['id'] == movieId].iloc[0]['title']
         print("movieTitle")
         print(movieTitle)
-        similarMoviesDict = similarItemService.getSimilarMovies(movieId, 1, metadata_DF, keywords_DF)
+        similarMoviesDict = similarItemService.getSimilarMovies(movieId, 3, metadata_DF, keywords_DF)
 
         template = loader.get_template('similarItemRecommendations/similarMovies.html')
         context = {

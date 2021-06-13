@@ -7,6 +7,6 @@ urlpatterns = [
     path('searchResult', views.searchMovieByTitle, name='searchMovieByTitle'),
     path('similarMovies', views.showSimilarMovies, name='showSimilarMovies'),
     path('moviesByGenres', views.showMoviesByGenres, name='showMoviesByGenres'),
-    path('MoviesByDirectors', views.showMoviesByDirectors, name='showMoviesByDirectors')
+    path('moviesByDirectors', views.showMoviesByDirectors, name='showMoviesByDirectors')
 
 ]

@@ -49,6 +49,7 @@ def computePopularity(dataframeMovies: DataFrame, dataframeRatings:DataFrame):
     dataframeMovies = dataframeMovies.sort_values(by="countRatings", ascending=False)
     return dataframeMovies
 
+
 def reduce_genre_length(input_str: str) -> list:
     """Reduces the length of a string i.e: \n
      [{'id': 878, 'name': 'Science Fiction'}, ... ] to ["Science Fiction", ...] """
@@ -57,3 +58,12 @@ def reduce_genre_length(input_str: str) -> list:
     for entry in data_dict_list:
         result_list.append(entry["name"])
     return result_list
+
+
+def cleanId(id):
+    # print(dataframeMovies)
+    try:
+        return int(id)
+
+    except:
+        return -1

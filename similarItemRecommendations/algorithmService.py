@@ -1,6 +1,7 @@
 import pandas
-from similarItemRecommendations import util
-
+from similarItemRecommendations import util, similarItemService
+from ast import literal_eval
+import numpy as np
 
 def calcSimilarity(kw1: pandas.Series, kw2: pandas.Series):   # kw..keyword list
 
@@ -59,9 +60,6 @@ def similarKeywords(movieId: int, keywords_DF):
 # Compares the similarity of the movies genres and all other movies genres to find most similar movies
 # returns list of 5 most similar movies
 def similarGenres(movieId: int, dataframeMovies):
-    print(dataframeMovies["id"])
-    print("movieId = ")
-    print(movieId)
     try:
         movieId = int(movieId)
     except ValueError:
@@ -81,5 +79,59 @@ def similarGenres(movieId: int, dataframeMovies):
     movies_df["similarity"] = movies_df.apply(lambda x: util.wighted_similarity(x, TF_IDF_value), axis=1)
     movies_df = movies_df.sort_values(by="similarity", ascending=False)
     movies_df = movies_df[movies_df.id !=  str(movieId)]
-    print(movies_df.head(5)["id"].tolist())
+    print(movies_df.head(5))
     return movies_df.head(5)["id"].tolist()
+
+def get_director(x):
+    for i in x:
+        if i['job'] == 'Director':
+            return i['name']
+    return np.nan
+
+
+# Algorithm 3 of 5
+# Compares the similarity of the movies' directors and all other movies movies' directors to find most similar movies
+# returns list of 5 most similar movies
+def similarDirectors(movieId: int, dataframeMovies):
+    try:
+        movieId = int(movieId)
+    except ValueError:
+        return False
+    # Load keywords and credits
+    df = dataframeMovies[dataframeMovies["id"] == str(movieId)]
+    df = df[["id", "title", "genres"]]
+    df["genres"] = df["genres"].apply(util.reduce_genre_length)
+    gernres = (df.iloc[0]["genres"])
+    genres_dict = {}
+    for genre in gernres:
+        genres_dict[genre] = 1
+    TF_IDF_value = util.TF_IDF(genres_dict, dataframeMovies)
+
+    credits = similarItemService.loadDF("archive/credits.csv")
+    movies_df = dataframeMovies[['id', 'title', 'genres']]
+    movies_df["genres"] = movies_df["genres"].apply(util.reduce_genre_length)
+    # # Remove rows with bad IDs.
+    credits["id"] = credits["id"].apply(util.cleanId)
+    credits= credits[credits.id != -1]
+    movies_df["id"] = movies_df["id"].apply(util.cleanId)
+    credits = credits[credits.id != -1]
+
+    selectedCredit = credits[credits["id"] == int(movieId)]
+    selectedCredit['crew'] = selectedCredit['crew'].apply(literal_eval)
+    selectedCredit['director'] = selectedCredit['crew'].apply(get_director)
+    selectedDirector = selectedCredit.iloc[0]["director"]
+
+    # Merge keywords and credits into your main metadata dataframe
+    metadata = movies_df.merge(credits, on='id')
+    metadata = metadata[['id', 'title', 'genres', 'crew']]
+    metadata['crew'] = metadata['crew'].apply(literal_eval)
+    metadata['director'] = metadata['crew'].apply(get_director)
+    metadata = metadata[['id', 'title', 'genres', 'director']]
+
+    metadata["similarity"] = metadata.apply(lambda x: util.wighted_similarity(x, TF_IDF_value), axis=1)
+    metadata = metadata.sort_values(by="similarity", ascending=False)
+    metadata = metadata[metadata.id !=  str(movieId)]
+    metadata = metadata[metadata["director"] == selectedDirector]
+    print(metadata.head(5))
+    return metadata.head(5)["id"].tolist()
+

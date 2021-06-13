@@ -142,7 +142,7 @@
     <div class="tab">
       <button class="tablinks" onclick="openResult(event, 'Algorithm1')">Similar Keywords</button> <!--event is deprecated but still works fine..-->
       <button class="tablinks" onclick="openResult(event, 'Algorithm2')">Search Movies by Genres</button>
-      <button class="tablinks" onclick="openResult(event, 'Algorithm3')">Search Movies by Directors</button>
+      <button class="tablinks" onclick="openResult(event, 'Algorithm3')">Search Movies by Director</button>
       <button class="tablinks" onclick="openResult(event, 'Algorithm4')">Algorithm 4</button>
       <button class="tablinks" onclick="openResult(event, 'Algorithm5')">Algorithm 5</button>
     </div>
@@ -197,7 +197,7 @@
        <!-- Movie Container -->
         {% for row in searchMovie %}
 
-            <form action="/sir/MoviesByDirectors" method="post">
+            <form action="/sir/moviesByDirectors" method="post">
                 <input type = "hidden" name = "movieId" value = "{{ row.id }}" />
 
                 <div class="movie" onclick="showSimilarItems(this);">

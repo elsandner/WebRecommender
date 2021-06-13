@@ -41,7 +41,7 @@ def applySimilarityAlgorithm(movieId, algorithmId, dataframeMovies, keywords_DF)
     elif algorithmId == 2:
         similarMovies = algorithmService.similarGenres(movieId, dataframeMovies)
     elif algorithmId == 3:
-        similarMovies = algorithmService.similarKeywords(movieId, keywords_DF)
+        similarMovies = algorithmService.similarDirectors(movieId, dataframeMovies)
     elif algorithmId == 4:
         similarMovies = algorithmService.similarKeywords(movieId, keywords_DF)
     elif algorithmId == 5:
