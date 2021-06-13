@@ -1,4 +1,5 @@
 import pandas
+from similarItemRecommendations import util
 
 
 def calcSimilarity(kw1: pandas.Series, kw2: pandas.Series):   # kw..keyword list
@@ -22,7 +23,7 @@ def similarKeywords(movieId: int, keywords_DF):
         movieId = int(movieId)
     except ValueError:
         return False
-
+    print(keywords_DF[keywords_DF["id"] == movieId])
     mainKW_String = keywords_DF[keywords_DF["id"] == movieId].iloc[0]['keywords']
     keywords_DF = keywords_DF[keywords_DF["id"] != movieId]  # remove main-keywords from keywords_DF
 
@@ -53,3 +54,32 @@ def similarKeywords(movieId: int, keywords_DF):
 
     print("5 most similar movies to ", movieId, ":\n ", similarity_dict_sorted)
     return bestMovies
+
+# Algorithm 2 of 5
+# Compares the similarity of the movies genres and all other movies genres to find most similar movies
+# returns list of 5 most similar movies
+def similarGenres(movieId: int, dataframeMovies):
+    print(dataframeMovies["id"])
+    print("movieId = ")
+    print(movieId)
+    try:
+        movieId = int(movieId)
+    except ValueError:
+        return False
+    df = dataframeMovies[dataframeMovies["id"] == str(movieId)]
+    df = df[["id", "title", "genres"]]
+    df["genres"] = df["genres"].apply(util.reduce_genre_length)
+    gernres = (df.iloc[0]["genres"])
+    print(gernres)
+    movies_df = dataframeMovies[["id", "title", "genres"]]
+    movies_df["genres"] = movies_df["genres"].apply(util.reduce_genre_length)
+    movies_df["similarity"] = movies_df.apply(lambda x: util.similarity(x, gernres), axis=1)
+    genres_dict = {}
+    for genre in gernres:
+        genres_dict[genre] = 1
+    TF_IDF_value = util.TF_IDF(genres_dict, dataframeMovies)
+    movies_df["similarity"] = movies_df.apply(lambda x: util.wighted_similarity(x, TF_IDF_value), axis=1)
+    movies_df = movies_df.sort_values(by="similarity", ascending=False)
+    movies_df = movies_df[movies_df.id !=  str(movieId)]
+    print(movies_df.head(5)["id"].tolist())
+    return movies_df.head(5)["id"].tolist()

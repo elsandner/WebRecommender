@@ -2,6 +2,7 @@ import ast
 
 import pandas
 from similarItemRecommendations import algorithmService
+# import util
 
 
 def searchMovies(title, dataframeMovies):
@@ -9,12 +10,12 @@ def searchMovies(title, dataframeMovies):
     # filter metadata according to search title
     dataframeMovies = dataframeMovies[dataframeMovies['title'].str.contains(title, na=False)]
 
-    return convertDfToDict(dataframeMovies)
+    return convertDfToDict(dataframeMovies.head(5))
 
 
 def getSimilarMovies(movieId, algorithmId, dataframeMovies, keywords_DF):
 
-    similarMovies = applySimilarityAlgorithm(movieId, algorithmId, keywords_DF) #List of Integers
+    similarMovies = applySimilarityAlgorithm(movieId, algorithmId, dataframeMovies, keywords_DF) #List of Integers
     similarMoviesStr = map(str, similarMovies)
 
     dataframeMovies = dataframeMovies[dataframeMovies['id'].isin(similarMoviesStr)]
@@ -31,14 +32,14 @@ def reduce_genre_length(input_str): #input string "[{'id': 878, 'name': 'Science
 
 
 # helper methods for getSimilarMovies:
-def applySimilarityAlgorithm(movieId, algorithmId, keywords_DF):
+def applySimilarityAlgorithm(movieId, algorithmId, dataframeMovies, keywords_DF):
 
     # TODO: change algorithms as soon as they are implemented
 
     if algorithmId == 1:
         similarMovies = algorithmService.similarKeywords(movieId, keywords_DF)
     elif algorithmId == 2:
-        similarMovies = algorithmService.similarKeywords(movieId, keywords_DF)
+        similarMovies = algorithmService.similarGenres(movieId, dataframeMovies)
     elif algorithmId == 3:
         similarMovies = algorithmService.similarKeywords(movieId, keywords_DF)
     elif algorithmId == 4:

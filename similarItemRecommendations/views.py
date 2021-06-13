@@ -42,7 +42,52 @@ def showSimilarMovies(request):
         movieId = form.data.get("movieId")
 
         movieTitle = metadata_DF.loc[metadata_DF['id'] == movieId].iloc[0]['title']
+        print("movieTitle")
+        print(movieTitle)
+        similarMoviesDict = similarItemService.getSimilarMovies(movieId, 1, metadata_DF, keywords_DF)
 
+        template = loader.get_template('similarItemRecommendations/similarMovies.html')
+        context = {
+            'movieTitle': movieTitle,
+            'searchMovie': similarMoviesDict,
+
+
+        }
+        return HttpResponse(template.render(context))
+
+
+@csrf_exempt
+def showMoviesByGenres(request):
+    print("calculating movies by genres...")
+    if request.method == 'POST':
+        form = NameForm(request.POST)  # TODO: works but seems to be bad practice ...
+        movieId = form.data.get("movieId")
+
+        movieTitle = metadata_DF.loc[metadata_DF['id'] == movieId].iloc[0]['title']
+        print("movieTitle")
+        print(movieTitle)
+        similarMoviesDict = similarItemService.getSimilarMovies(movieId, 2, metadata_DF, keywords_DF)
+
+        template = loader.get_template('similarItemRecommendations/similarMovies.html')
+        context = {
+            'movieTitle': movieTitle,
+            'searchMovie': similarMoviesDict,
+
+
+        }
+        return HttpResponse(template.render(context))
+
+
+@csrf_exempt
+def showMoviesByDirectors(request):
+    print("calculating movies by directors...")
+    if request.method == 'POST':
+        form = NameForm(request.POST)  # TODO: works but seems to be bad practice ...
+        movieId = form.data.get("movieId")
+
+        movieTitle = metadata_DF.loc[metadata_DF['id'] == movieId].iloc[0]['title']
+        print("movieTitle")
+        print(movieTitle)
         similarMoviesDict = similarItemService.getSimilarMovies(movieId, 1, metadata_DF, keywords_DF)
 
         template = loader.get_template('similarItemRecommendations/similarMovies.html')
