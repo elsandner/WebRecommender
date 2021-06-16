@@ -45,7 +45,7 @@ def applySimilarityAlgorithm(movieId, algorithmId, dataframeMovies, keywords_DF)
     elif algorithmId == 4:
         similarMovies = algorithmService.similarActors(movieId, keywords_DF)#KEYWORDS's actually the crew DF
     elif algorithmId == 5:
-        similarMovies = algorithmService.similarRatings(movieId, dataframeMovies)
+        similarMovies = algorithmService.similarRatings(movieId, keywords_DF)#keywords is actually merged_DF
         
     else:
         similarMovies = ["invalid algorithmId"]

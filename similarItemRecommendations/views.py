@@ -16,6 +16,7 @@ try:
 except: 
     print("WARNING: merged_ratings.csv doesn't exist. (Normal if it's the first time running the server) \n Creating a new merged_ratings.csv It will take a few minutes...")
     create_merged_ratings_df(metadata_DF,ratings_DF)
+    merged_ratings_DF = similarItemService.loadDF("archive/merged_ratings.csv")
 
 def index(request):
     template = loader.get_template('similarItemRecommendations/index.html')
@@ -53,100 +54,21 @@ def showSimilarMovies(request):
         movieTitle = metadata_DF.loc[metadata_DF['id'] == movieId].iloc[0]['title']
         print("movieTitle")
         print(movieTitle)
-        similarMoviesDict = similarItemService.getSimilarMovies(movieId, 1, metadata_DF, keywords_DF)
+        similarMoviesDict1 = similarItemService.getSimilarMovies(movieId, 1, metadata_DF, keywords_DF)
+        similarMoviesDict2 = similarItemService.getSimilarMovies(movieId, 2, metadata_DF, keywords_DF)
+        similarMoviesDict3 = similarItemService.getSimilarMovies(movieId, 3, metadata_DF, keywords_DF)
+        similarMoviesDict4 = similarItemService.getSimilarMovies(movieId, 4, metadata_DF, credits_DF)
+        similarMoviesDict5 = similarItemService.getSimilarMovies(movieId, 5, metadata_DF, merged_ratings_DF)
 
         template = loader.get_template('similarItemRecommendations/similarMovies.html')
         context = {
             'movieTitle': movieTitle,
-            'searchMovie': similarMoviesDict,
-
-
+            'searchMovieKeywords': similarMoviesDict1,
+            'searchMovieGenres': similarMoviesDict2,
+            'searchMovieDirectors': similarMoviesDict3,
+            'searchMovieActors': similarMoviesDict4,
+            'searchMovieRatings': similarMoviesDict5
         }
         return HttpResponse(template.render(context))
 
-
-@csrf_exempt
-def showMoviesByGenres(request):
-    print("calculating movies by genres...")
-    if request.method == 'POST':
-        form = NameForm(request.POST)  # TODO: works but seems to be bad practice ...
-        movieId = form.data.get("movieId")
-
-        movieTitle = metadata_DF.loc[metadata_DF['id'] == movieId].iloc[0]['title']
-        print("movieTitle")
-        print(movieTitle)
-        similarMoviesDict = similarItemService.getSimilarMovies(movieId, 2, metadata_DF, keywords_DF)
-
-        template = loader.get_template('similarItemRecommendations/similarMovies.html')
-        context = {
-            'movieTitle': movieTitle,
-            'searchMovie': similarMoviesDict,
-
-
-        }
-        return HttpResponse(template.render(context))
-
-
-@csrf_exempt
-def showMoviesByDirectors(request):
-    print("calculating movies by directors...")
-    if request.method == 'POST':
-        form = NameForm(request.POST)  # TODO: works but seems to be bad practice ...
-        movieId = form.data.get("movieId")
-
-        movieTitle = metadata_DF.loc[metadata_DF['id'] == movieId].iloc[0]['title']
-        print("movieTitle")
-        print(movieTitle)
-        similarMoviesDict = similarItemService.getSimilarMovies(movieId, 3, metadata_DF, keywords_DF)
-
-        template = loader.get_template('similarItemRecommendations/similarMovies.html')
-        context = {
-            'movieTitle': movieTitle,
-            'searchMovie': similarMoviesDict,
-
-
-        }
-        return HttpResponse(template.render(context))
-
-@csrf_exempt
-def showMoviesByActors(request):
-    print("calculating similar actors...")
-    if request.method == 'POST':
-        form = NameForm(request.POST)  # TODO: works but seems to be bad practice ...
-        movieId = form.data.get("movieId")
-
-        movieTitle = metadata_DF.loc[metadata_DF['id'] == movieId].iloc[0]['title']
-        print("movieTitle")
-        print(movieTitle)
-        similarMoviesDict = similarItemService.getSimilarMovies(movieId, 4, metadata_DF, credits_DF)
-
-        template = loader.get_template('similarItemRecommendations/similarMovies.html')
-        context = {
-            'movieTitle': movieTitle,
-            'searchMovie': similarMoviesDict,
-
-
-        }
-        return HttpResponse(template.render(context))
-
-@csrf_exempt
-def showMoviesByRatings(request):
-    print("calculating similar ratings...")
-    if request.method == 'POST':
-        form = NameForm(request.POST)  # TODO: works but seems to be bad practice ...
-        movieId = form.data.get("movieId")
-
-        movieTitle = metadata_DF.loc[metadata_DF['id'] == movieId].iloc[0]['title']
-        print("movieTitle")
-        print(movieTitle)
-        similarMoviesDict = similarItemService.getSimilarMovies(movieId, 5, merged_ratings_DF, keywords_DF)
-
-        template = loader.get_template('similarItemRecommendations/similarMovies.html')
-        context = {
-            'movieTitle': movieTitle,
-            'searchMovie': similarMoviesDict,
-
-
-        }
-        return HttpResponse(template.render(context))
 

@@ -149,7 +149,7 @@
 
     <div id="Algorithm1" class="tabcontent">
         <!-- Movie Container -->
-        {% for row in searchMovie %}
+        {% for row in searchMovieKeywords %}
 
             <form action="/sir/similarMovies" method="post">
                 <input type = "hidden" name = "movieId" value = "{{ row.id }}" />
@@ -172,7 +172,7 @@
 
     <div id="Algorithm2" class="tabcontent">
       <!-- Movie Container -->
-        {% for row in searchMovie %}
+        {% for row in searchMovieGenres %}
 
             <form action="/sir/moviesByGenres" method="post">
                 <input type = "hidden" name = "movieId" value = "{{ row.id }}" />
@@ -195,7 +195,7 @@
 
     <div id="Algorithm3" class="tabcontent">
        <!-- Movie Container -->
-        {% for row in searchMovie %}
+        {% for row in searchMovieDirectors %}
 
             <form action="/sir/moviesByDirectors" method="post">
                 <input type = "hidden" name = "movieId" value = "{{ row.id }}" />
@@ -218,7 +218,7 @@
 
     <div id="Algorithm4" class="tabcontent">
         <!-- Movie Container -->
-        {% for row in searchMovie %}
+        {% for row in searchMovieActors %}
 
             <form action="/sir/similarMovies" method="post">
                 <input type = "hidden" name = "movieId" value = "{{ row.id }}" />
@@ -241,7 +241,7 @@
 
     <div id="Algorithm5" class="tabcontent">
         <!-- Movie Container -->
-        {% for row in searchMovie %}
+        {% for row in searchMovieRatings %}
 
             <form action="/sir/similarMovies" method="post">
                 <input type = "hidden" name = "movieId" value = "{{ row.id }}" />

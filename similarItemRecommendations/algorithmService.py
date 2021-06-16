@@ -83,6 +83,7 @@ def similarGenres(movieId: int, dataframeMovies):
     movies_df = movies_df.sort_values(by="similarity", ascending=False)
     movies_df = movies_df[movies_df.id !=  str(movieId)]
     print(movies_df.head(5))
+    print("FINISHED SIMILAR GENRES")
     return movies_df.head(5)["id"].tolist()
 
 def get_director(x):
@@ -136,6 +137,7 @@ def similarDirectors(movieId: int, dataframeMovies):
     metadata = metadata[metadata.id !=  str(movieId)]
     metadata = metadata[metadata["director"] == selectedDirector]
     print(metadata.head(5))
+    print("FINISHED SIMILAR DIRECTORS")
     return metadata.head(5)["id"].tolist()
 
 
@@ -177,10 +179,12 @@ def similarActors(movieId: int, credits):
 
     dictNrCommonActors = {k: v for k, v in sorted(dictNrCommonActors.items(), key=lambda item: item[1],reverse = True)}
     similar5 = list(dictNrCommonActors.keys())[:5]
+    print("FINISHED SIMILAR ACTORS")
     return similar5 #return first 5 items
 
 
 def similarRatings( movieId: int, merged_DF):
+    print(merged_DF.head(5))
     selectedMovie =  merged_DF[merged_DF["id"] == int(movieId)]
     listGenresOfSelected = selectedMovie["genres"].iloc[0]
     listGenresOfSelected= literal_eval(listGenresOfSelected)
@@ -203,6 +207,7 @@ def similarRatings( movieId: int, merged_DF):
 
     dictNrCommonActors = {k: v for k, v in sorted(dictNrCommonActors.items(), key=lambda item: item[1],reverse=True)}
     similar5 = list(dictNrCommonActors.keys())[:5]
+    print("FINISHED SIMILAR RATINGS")
     return similar5 #return first 5 items
     
 
