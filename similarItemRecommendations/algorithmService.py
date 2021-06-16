@@ -138,7 +138,8 @@ def similarDirectors(movieId: int, dataframeMovies):
     metadata = metadata[metadata["director"] == selectedDirector]
     print(metadata.head(5))
     print("FINISHED SIMILAR DIRECTORS")
-    return metadata.head(5)["id"].tolist()
+    returnList = metadata.head(6)["id"].tolist()
+    return returnList[1:6]
 
 
 def similarActors(movieId: int, credits):
@@ -158,7 +159,7 @@ def similarActors(movieId: int, credits):
     listCast = literal_eval(listCast)
     print(listCast)
     setTop10Cast = set()
-    for i in range(10):
+    for i in range(min(10,len(listCast))):
         actor = listCast[i]
         setTop10Cast.add(actor['name'])
     #####
