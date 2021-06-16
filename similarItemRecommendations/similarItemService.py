@@ -43,9 +43,10 @@ def applySimilarityAlgorithm(movieId, algorithmId, dataframeMovies, keywords_DF)
     elif algorithmId == 3:
         similarMovies = algorithmService.similarDirectors(movieId, dataframeMovies)
     elif algorithmId == 4:
-        similarMovies = algorithmService.similarKeywords(movieId, keywords_DF)
+        similarMovies = algorithmService.similarActors(movieId, keywords_DF)#KEYWORDS's actually the crew DF
     elif algorithmId == 5:
-        similarMovies = algorithmService.similarKeywords(movieId, keywords_DF)
+        similarMovies = algorithmService.similarRatings(movieId, dataframeMovies)
+        
     else:
         similarMovies = ["invalid algorithmId"]
 

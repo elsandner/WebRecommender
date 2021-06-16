@@ -1,7 +1,10 @@
 import pandas
+import os,sys
+sys.path.append(os.getcwd()) #Cannot import similarItemRecommendations otherwise
 from similarItemRecommendations import util, similarItemService
 from ast import literal_eval
 import numpy as np
+from scipy.stats import ks_2samp
 
 def calcSimilarity(kw1: pandas.Series, kw2: pandas.Series):   # kw..keyword list
 
@@ -134,4 +137,96 @@ def similarDirectors(movieId: int, dataframeMovies):
     metadata = metadata[metadata["director"] == selectedDirector]
     print(metadata.head(5))
     return metadata.head(5)["id"].tolist()
+
+
+def similarActors(movieId: int, credits):
+    try:
+        movieId = int(movieId)
+    except ValueError:
+        return False
+    # Load movies and credits
+    ################################################
+    
+    #dataframeMovies = dataframeMovies[["id", "title", "genres"]]
+    #dataframeMovies["genres"] = dataframeMovies["genres"].apply(util.reduce_genre_length)
+    #print(credits.head(5))
+
+    selectedCredit = credits[credits["id"] == int(movieId)]
+    listCast = selectedCredit.iloc[0,0]
+    listCast = literal_eval(listCast)
+    print(listCast)
+    setTop10Cast = set()
+    for i in range(10):
+        actor = listCast[i]
+        setTop10Cast.add(actor['name'])
+    #####
+    #got the actor names, must search for other movies with those names
+    dictNrCommonActors = dict()
+    for index, row in credits.iterrows():#Iterate thruout the whole cridits DB to find a similar movie
+        if row["id"] != int(movieId): #not the same movie
+            
+            currentDictListCast = row.iloc[0]
+            currentDictListCast = literal_eval(currentDictListCast)
+            listNewCurrentCast = []
+            for i in range(min(10,len(currentDictListCast))): #min(10,nrOfActors) due to computational need
+                actor = currentDictListCast[i]
+                listNewCurrentCast.append(actor['name'])
+
+            commonNr = len(setTop10Cast.intersection(listNewCurrentCast))
+            dictNrCommonActors[row["id"]] = commonNr #The movie gets assigned how many actors they share. Higher -> Better
+
+    dictNrCommonActors = {k: v for k, v in sorted(dictNrCommonActors.items(), key=lambda item: item[1],reverse = True)}
+    similar5 = list(dictNrCommonActors.keys())[:5]
+    return similar5 #return first 5 items
+
+
+def similarRatings( movieId: int, merged_DF):
+    selectedMovie =  merged_DF[merged_DF["id"] == int(movieId)]
+    listGenresOfSelected = selectedMovie["genres"].iloc[0]
+    listGenresOfSelected= literal_eval(listGenresOfSelected)
+    #listGenresOfSelected = set(listGenresOfSelected)
+    print ("Starting similar ratings")
+
+    dictNrCommonActors = dict()
+    for index, row in merged_DF.iterrows():
+        if row["id"] != int(movieId):
+            currentDictListCast = row["genres"]
+            currentDictListCast = literal_eval(currentDictListCast)
+            commonGenres = (set(listGenresOfSelected)).intersection(currentDictListCast)
+            totalGenres = currentDictListCast + listGenresOfSelected
+            totalGenres = set(totalGenres)            
+            dist = float(len(commonGenres)/len(totalGenres))
+            averageRating =literal_eval(row["rating"])
+            averageRating = sum(averageRating)/len(averageRating) #Instead of average do Kolmogorov–Smirnov test from scipy?
+            score = dist*float(averageRating) 
+            dictNrCommonActors[row["id"]] = score
+
+    dictNrCommonActors = {k: v for k, v in sorted(dictNrCommonActors.items(), key=lambda item: item[1],reverse=True)}
+    similar5 = list(dictNrCommonActors.keys())[:5]
+    return similar5 #return first 5 items
+    
+
+
+# ##############################
+# #TODO: DELETE LATER
+
+# def loadDF(path: str):
+#     try:
+#         print("Loading dataframe from "+path+"...")
+#         return pandas.read_csv(path, delimiter=',', low_memory=False)
+
+#     except Exception as e:
+#         print("Failed to load the dataset")
+#         print(e)
+#         return
+
+# metadata_DF = loadDF("archive/movies_metadata.csv")
+# #keywords_DF = loadDF("archive/keywords.csv") 
+# ratings_DF = loadDF("archive/ratings.csv")
+# #util.create_merged_ratings_df(metadata_DF,ratings_DF)
+# merged_DF = loadDF("archive/merged_ratings.csv")
+# #credits_DF = loadDF("archive/credits.csv")
+
+# #TOY STORY
+# similarRatings(862, merged_DF)
 

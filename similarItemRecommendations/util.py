@@ -67,3 +67,21 @@ def cleanId(id):
 
     except:
         return -1
+
+#create the merged_ratings.csv file for the search algorithm
+def create_merged_ratings_df(dataframeMovies, dataframeRatings):
+    try:
+        print("Creating Merged Gernes&Rating DF")
+        dataframeRatings['movieId']=dataframeRatings['movieId'].astype(str) 
+        dataframeRatings = dataframeRatings.groupby(["movieId"])["rating"].apply( lambda x: ','.join(x.astype(str))).reset_index()
+        dataframeMovies = dataframeMovies[["id", "title", "genres"]]
+        dataframeMovies["genres"] = dataframeMovies["genres"].apply(reduce_genre_length)    
+        dataframeMerged = dataframeMovies.merge(dataframeRatings, how='inner',left_on='id', right_on='movieId')
+        dataframeMerged["rating"] = dataframeMerged["rating"].apply(lambda x: str("["+x+"]"))
+        print(dataframeMerged)
+        dataframeMerged.to_csv("./archive/merged_ratings.csv",index = False)
+        print("Saved DF to archive/merged_ratings.csv")
+        return True
+    except Exception as e:
+        print(e)
+        return False

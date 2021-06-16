@@ -143,8 +143,8 @@
       <button class="tablinks" onclick="openResult(event, 'Algorithm1')">Similar Keywords</button> <!--event is deprecated but still works fine..-->
       <button class="tablinks" onclick="openResult(event, 'Algorithm2')">Search Movies by Genres</button>
       <button class="tablinks" onclick="openResult(event, 'Algorithm3')">Search Movies by Director</button>
-      <button class="tablinks" onclick="openResult(event, 'Algorithm4')">Algorithm 4</button>
-      <button class="tablinks" onclick="openResult(event, 'Algorithm5')">Algorithm 5</button>
+      <button class="tablinks" onclick="openResult(event, 'Algorithm4')">Search Movies by Actors</button>
+      <button class="tablinks" onclick="openResult(event, 'Algorithm5')">Search Movies by Ratings</button>
     </div>
 
     <div id="Algorithm1" class="tabcontent">
@@ -217,11 +217,49 @@
     </div>
 
     <div id="Algorithm4" class="tabcontent">
-      <p>Algorithm 4 is not implemented yet </p>
+        <!-- Movie Container -->
+        {% for row in searchMovie %}
+
+            <form action="/sir/similarMovies" method="post">
+                <input type = "hidden" name = "movieId" value = "{{ row.id }}" />
+
+                <div class="movie" onclick="showSimilarItems(this);">
+                    <div class="headline">
+                        <h1>{{ row.title }}</h1>
+                        <p class="date">  ({{ row.release_date }})</p>
+                        <p class="rating">Rating: {{ row.vote_average }}/10 ( {{ row.vote_count }} reviews)</p>
+                    </div>
+                    <p><b>Genres: </b> {{ row.genres}}</p>
+
+                    <p class="overview">
+                         {{ row.overview }}
+                    </p>
+                </div>
+            </form>
+        {% endfor %}
     </div>
 
     <div id="Algorithm5" class="tabcontent">
-      <p>Algorithm 5 is not implemented yet </p>
+        <!-- Movie Container -->
+        {% for row in searchMovie %}
+
+            <form action="/sir/similarMovies" method="post">
+                <input type = "hidden" name = "movieId" value = "{{ row.id }}" />
+
+                <div class="movie" onclick="showSimilarItems(this);">
+                    <div class="headline">
+                        <h1>{{ row.title }}</h1>
+                        <p class="date">  ({{ row.release_date }})</p>
+                        <p class="rating">Rating: {{ row.vote_average }}/10 ( {{ row.vote_count }} reviews)</p>
+                    </div>
+                    <p><b>Genres: </b> {{ row.genres}}</p>
+
+                    <p class="overview">
+                         {{ row.overview }}
+                    </p>
+                </div>
+            </form>
+        {% endfor %}
     </div>
 
         <!-- Loading Screen -->
