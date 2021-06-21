@@ -185,8 +185,11 @@ def similarActors(movieId: int, credits):
 
 
 def similarRatings( movieId: int, merged_DF):
-    print(merged_DF.head(5))
+    print("#### MOVIE ID:" + str(movieId))
     selectedMovie =  merged_DF[merged_DF["id"] == int(movieId)]
+    if selectedMovie.empty:
+        print('DataFrame is empty!')
+        return ["No ratings found for the given movie"]
     listGenresOfSelected = selectedMovie["genres"].iloc[0]
     listGenresOfSelected= literal_eval(listGenresOfSelected)
     #listGenresOfSelected = set(listGenresOfSelected)
@@ -233,6 +236,6 @@ def similarRatings( movieId: int, merged_DF):
 # merged_DF = loadDF("archive/merged_ratings.csv")
 # #credits_DF = loadDF("archive/credits.csv")
 
-# #TOY STORY
-# similarRatings(862, merged_DF)
+# #TOY STORY 862  9637-> Scooby-Doo
+# similarRatings(9637, merged_DF)
 
